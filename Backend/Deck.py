@@ -44,12 +44,12 @@ class Deck():
 
         print("_________________")
         for card in deck:
-            card.print_card()
+            card.printCard()
             print("------------------")
 
     def burn_card(self):
         print("before taking card on the deck")
-        self.print_card()
+        self.printCard()
         print("After buring")
         top_card = self.deck[0]
         self.deck.pop(0)
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     d1.shuffle()
     card = d1.give_card()
     print("given card is")
-    card.print_card()
+    card.printCard()
     d1.print_deck()
 
 
