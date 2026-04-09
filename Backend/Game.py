@@ -22,7 +22,20 @@ class Game():
                          name="Sam",
                          amount=2000)
         
+        self._turn = "human"
         self.deck = deck
+
+    @property
+    def turn(self):
+        return self._turn
+    
+    @turn.setter
+    def turn(self, player):
+        if player in ["human", "pc"]:
+            self._turn = player
+        else:
+            raise ValueError("Turn must be either 'human' or 'pc'")
+
 
 
 if __name__ == "__main__":
