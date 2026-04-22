@@ -1,12 +1,12 @@
+from app import create_app
+from app import auth_bp   
 from dotenv import load_dotenv
-from prisma import Prisma
-from flask import Flask, jsonify,Blueprint
-import asyncio
+import os
 
-from student import students_bp
+load_dotenv()
+app = create_app()
+
+app.register_blueprint(auth_bp)
 
 if __name__ == '__main__':
-    app = Flask(__name__)
-    app.register_blueprint(students_bp, url_prefix='/students')
     app.run(debug=True)
-    

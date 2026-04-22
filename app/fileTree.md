@@ -1,6 +1,6 @@
 # File Tree: Texas-Hold-em-game
 
-**Generated:** 4/21/2026, 9:32:38 AM
+**Generated:** 4/21/2026, 10:51:08 AM
 **Root Path:** `/home/sam/Desktop/repos/Texas-Hold-em-game`
 
 ```
@@ -11,13 +11,19 @@
 │   ├── 🐍 Player.py
 │   ├── 🐍 Round.py
 │   └── 🐍 cli.py
+├── 📁 app
+│   ├── 🐍 __init__.py
+│   ├── 🐍 app.py
+│   ├── 🐍 auth.py
+│   └── 🐍 prisma.py
 ├── 📁 prisma
 │   └── 📄 schema.prisma
 ├── ⚙️ .gitignore
 ├── 🖼️ Flowchart design.png
 ├── 📄 LICENSE
 ├── 📝 README.md
-└── 🐍 main.py
+├── 🐍 main.py
+└── 🐍 student.py
 ```
 
 ---
