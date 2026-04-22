@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-py"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model chat_history {
+  id           Int       @id @default(autoincrement())
+  user_id      Int
+  mode         String?   @db.VarChar(20)
+  user_message String
+  ai_response  String?
+  tokens_used  Int?
+  model_used   String?   @db.VarChar(50)
+  sent_at      DateTime? @db.Timestamp(6)
+  users        users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model command_history {
+  id            Int       @id @default(autoincrement())
+  user_id       Int
+  command_text  String
+  command_type  String?   @db.VarChar(50)
+  response_text String?
+  success       Boolean?
+  source        String?   @db.VarChar(20)
+  executed_at   DateTime? @db.Timestamp(6)
+  users         users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model file_actions {
+  id            Int       @id @default(autoincrement())
+  user_id       Int
+  action_type   String    @db.VarChar(50)
+  source_path   String?   @db.VarChar(500)
+  dest_path     String?   @db.VarChar(500)
+  file_category String?   @db.VarChar(50)
+  undone        Boolean?
+  source        String?   @db.VarChar(20)
+  performed_at  DateTime? @db.Timestamp(6)
+  users         users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model notifications {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  type       String?   @db.VarChar(20)
+  title      String    @db.VarChar(200)
+  message    String?
+  is_read    Boolean?
+  source     String?   @db.VarChar(20)
+  created_at DateTime? @db.Timestamp(6)
+  users      users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model preferences {
+  id               Int       @id @default(autoincrement())
+  user_id          Int       @unique
+  theme            String?   @db.VarChar(20)
+  language         String?   @db.VarChar(10)
+  city             String?   @db.VarChar(100)
+  ai_model         String?   @db.VarChar(50)
+  voice_enabled    Boolean?
+  notifications_on Boolean?
+  updated_at       DateTime? @db.Timestamp(6)
+  users            users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model project {
+  id         BigInt   @id @default(autoincrement())
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model sessions {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  token      String    @unique @db.VarChar(500)
+  ip_address String?   @db.VarChar(50)
+  user_agent String?   @db.VarChar(200)
+  expires_at DateTime  @db.Timestamp(6)
+  created_at DateTime? @db.Timestamp(6)
+  users      users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id              Int               @id @default(autoincrement())
+  username        String            @unique @db.VarChar(80)
+  email           String            @unique @db.VarChar(120)
+  password_hash   String            @db.VarChar(256)
+  display_name    String?           @db.VarChar(100)
+  avatar_url      String?           @db.VarChar(300)
+  role            String?           @db.VarChar(20)
+  is_active       Boolean?
+  created_at      DateTime?         @db.Timestamp(6)
+  last_login      DateTime?         @db.Timestamp(6)
+  chat_history    chat_history[]
+  command_history command_history[]
+  file_actions    file_actions[]
+  notifications   notifications[]
+  preferences     preferences?
+  sessions        sessions[]
+}
+
+model student {
+  id   Int    @id @default(autoincrement())
+  name String
+}
+
+model player {
+  id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name            String           @db.VarChar(250)
+  email           String           @unique @db.VarChar(500)
+  created_at      DateTime         @default(now()) @db.Timestamp(6)
+  updated_at      DateTime         @default(now()) @db.Timestamp(6)
+  player_password player_password?
+}
+
+model player_password {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  player_id  String   @unique @db.Uuid
+  password   String
+  updated_at DateTime @default(now()) @db.Timestamp(6)
+  player     player   @relation(fields: [player_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+ 
